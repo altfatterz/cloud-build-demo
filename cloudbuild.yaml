@@ -1,15 +1,30 @@
 substitutions:
-  _IMAGE_NAME: my-image # Configure this
+  _IMAGE_NAME: cloud-build-demo # Configure this
+  _GCS_CACHE_BUCKET: cloud-build-demo
 
 steps:
 
-- # Uses the Cloud Builder Maven image since it is cached.
-  name: gcr.io/cloud-builders/mvn
+# Load the cache from GCS if they exist
+- name: gcr.io/cloud-builders/gsutil
   dir: /root
   entrypoint: bash
-  # Links the Docker config to /root/.docker/config.json so Jib picks it up.
-  # Note that this is only a temporary workaround.
-  # See https://github.com/GoogleContainerTools/jib/pull/1479.
+  args:
+  - -c
+  - |
+    (
+      gsutil cp gs://${_GCS_CACHE_BUCKET}/m2-cache.tar.gz /tmp/m2-cache.tar.gz &&
+      tar -xzf /tmp/m2-cache.tar.gz
+    ) || echo 'Cache not found'
+  volumes:
+  - name: user.home
+    path: /root
+
+# Links the Docker config to /root/.docker/config.json so Jib picks it up.
+# Note that this is only a temporary workaround.
+# See https://github.com/GoogleContainerTools/jib/pull/1479.
+- name: gcr.io/cloud-builders/mvn
+  dir: /root
+  entrypoint: bash
   args: ['-c', 'mkdir .docker && ln -s $$HOME/.docker/config.json .docker/config.json']
   volumes:
   - name: user.home
@@ -22,3 +37,15 @@ steps:
   - name: user.home
     path: /root
 
+# Cache the .m2 folder to GCS
+- name: gcr.io/cloud-builders/gsutil
+  dir: /root
+  entrypoint: bash
+  args:
+  - -c
+  - |
+    tar -czf /tmp/m2-cache.tar.gz .m2 &&
+    gsutil cp /tmp/m2-cache.tar.gz gs://${_GCS_CACHE_BUCKET}/m2-cache.tar.gz
+  volumes:
+  - name: user.home
+    path: /root
