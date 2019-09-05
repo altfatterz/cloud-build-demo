@@ -18,6 +18,12 @@ $ mvn clean install jib:dockerBuild -Dimage=altfatterz/docker-jib-demo
 $ gcloud builds submit
 ```
 
+## Caching Maven dependencies
+
 ## Building and debugging locally
 
 https://cloud.google.com/cloud-build/docs/build-debug-locally
+
+
+## Deploying
+
