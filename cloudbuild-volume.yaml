@@ -1,0 +1,17 @@
+steps:
+- name: ubuntu
+  volumes:
+  - name: root
+    path: /root
+  entrypoint: 'bash'
+  dir: /root
+  args:
+  - '-c'
+  - |
+    mkdir .m2 && cd .m2 && echo "Hello, world!" > test.txt
+
+- name: 'ubuntu'
+  volumes:
+  - name: root
+    path: /root
+  args: ['cat', '/root/.m2/test.txt']
