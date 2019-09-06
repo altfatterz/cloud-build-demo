@@ -15,6 +15,6 @@ public class CloudBuildDemoApplication {
 
     @GetMapping("/")
     public String index() {
-        return "Google Cloud Build rocks!";
+        return "Google Cloud Build rocks!!";
     }
 }
