@@ -42,7 +42,7 @@ steps:
   - run
   - --image=eu.gcr.io/${PROJECT_ID}/${_IMAGE_NAME}:latest
   - --location=europe-west6-a
-  - --cluster=cloud-build-demobre
+  - --cluster=cloud-build-demo
   - --expose=8080
 
   # Cache the .m2 folder to GCS
