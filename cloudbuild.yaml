@@ -60,7 +60,9 @@ steps:
 
 - name: gcr.io/cloud-builders/curl
   args:
-  - -X POST
-  - -H 'Content-type: application/json'
+  - -X
+  - POST
+  - -H
+  - 'Content-type: application/json'
   - --data '{"text":"New deployment done! --> http://34.65.71.251:8080/"}'
   - https://hooks.slack.com/services/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
