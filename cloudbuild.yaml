@@ -19,23 +19,8 @@ steps:
   - name: user.home
     path: /root
 
-# Links the Docker config to /root/.docker/config.json so Jib picks it up.
-# Note that this is only a temporary workaround.
-# See https://github.com/GoogleContainerTools/jib/pull/1479.
-- name: gcr.io/cloud-builders/mvn
-  dir: /root
-  entrypoint: bash
-  args: ['-c', 'mkdir .docker && ln -s $$HOME/.docker/config.json .docker/config.json']
-  volumes:
-  - name: user.home
-    path: /root
-
-- name: gcr.io/cloud-builders/mvn
+- name: gcr.io/cloud-builders/mvn:3.5.0-jdk-8
   args: ['clean', 'install', 'jib:build', '-Dimage=eu.gcr.io/${PROJECT_ID}/${_IMAGE_NAME}']
-  # a Volume is a Docker container volume that is mounted into build steps to persist files across build steps
-  volumes:
-  - name: user.home
-    path: /root
 
 - name: 'gcr.io/cloud-builders/gke-deploy:stable'
   args:

@@ -1,0 +1,7 @@
+substitutions:
+  _IMAGE_NAME: cloud-build-demo # Configure this
+
+steps:
+
+- name: gcr.io/cloud-builders/mvn:3.5.0-jdk-8
+  args: ['clean', 'install', 'jib:build', '-Dimage=eu.gcr.io/${PROJECT_ID}/${_IMAGE_NAME}']
